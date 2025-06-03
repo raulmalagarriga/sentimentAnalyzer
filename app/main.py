@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from app.routers.sentimentRouter import router
 
 def create_app() -> FastAPI:
@@ -11,7 +12,19 @@ def create_app() -> FastAPI:
         version="1.0.0",
     )
 
-    # Include the router under the "/sentiment" prefix
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=[
+            "http://localhost:3000",
+            "http://127.0.0.1:3000",
+            "http://localhost:8000",
+        ],
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+    # Include the router
     app.include_router(
         router,
         prefix="/sentiment",
@@ -20,27 +33,4 @@ def create_app() -> FastAPI:
 
     return app
 
-# The actual ASGI application
 app = create_app()
-
-
-# class TextInput(BaseModel):
-#     text: str
-
-# class SentimentResponse(BaseModel):
-#     sentiment: str
-#     polarity: float
-
-# @app.post("/sentiment", response_model=SentimentResponse, summary="Analyze sentiment of a given text")
-# def analyze_sentiment(payload: TextInput):
-#     blob = TextBlob(payload.text)
-#     polarity = round(blob.sentiment.polarity, 3)
-
-#     if polarity > 0:
-#         sentiment = "positive"
-#     elif polarity < 0:
-#         sentiment = "negative"
-#     else:
-#         sentiment = "neutral"
-
-#     return SentimentResponse(sentiment=sentiment, polarity=polarity)
