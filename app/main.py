@@ -1,24 +1,28 @@
 from fastapi import FastAPI
-from pydantic import BaseModel
-from textblob import TextBlob
+from app.routers.sentimentRouter import router
 
-app = FastAPI(
-    title="Sentiment Analysis API",
-    description="A simple API that returns positive/negative/neutral sentiment for a given text input.",
-    version="1.0.0",
-)
+def create_app() -> FastAPI:
+    """
+    Application factory: creates and configures the FastAPI instance.
+    """
+    app = FastAPI(
+        title="Sentiment Analysis API",
+        description="A simple API that returns positive/negative/neutral sentiment for a given text input.",
+        version="1.0.0",
+    )
 
-# routers
-app.include_router(
-    sentiment.router,
-    prefix="/sentiment",
-    tags=["sentiment"],
-)
+    # Include the router under the "/sentiment" prefix
+    app.include_router(
+        router,
+        prefix="/sentiment",
+        tags=["sentiment"]
+    )
 
-return app
+    return app
 
-# application
+# The actual ASGI application
 app = create_app()
+
 
 # class TextInput(BaseModel):
 #     text: str
