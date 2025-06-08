@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.routers.sentimentRouter import router
+from app.config import settings
 
 def create_app() -> FastAPI:
     """
@@ -15,9 +16,7 @@ def create_app() -> FastAPI:
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[
-            "http://localhost:3000",
-            "http://127.0.0.1:3000",
-            "http://localhost:8000",
+            settings.frontend_url
         ],
         allow_credentials=True,
         allow_methods=["*"],
